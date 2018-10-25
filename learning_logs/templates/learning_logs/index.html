@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>learning_logs</title>
+
+</head>
+<body>
+{% extends 'learning_logs/base.html' %}
+
+{% block header %}
+    <div class="jumbotron" name="intro" align="center">
+        <h1>开始你的学习生活</h1>
+    </div>
+{% endblock header %}
+
+{% block content %}
+    <h2>
+        <a href="{% url 'users:register' %}">注册一个账户</a>去开始自己的学习日记
+        Learning Log会记住它.
+    </h2>
+    <h2>
+        用你的所学建立一个主题, 添加你所学的内容
+    </h2>
+
+{% endblock content %}
+
+</body>
+</html>

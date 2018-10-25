@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+{% extends 'learning_logs/base.html' %}
+{% load bootstrap3 %}
+{% block header %}
+    <h2>登陆账户</h2>
+{% endblock header %}
+{% block content %}
+{#    {% if form.errors %}#}
+{#        <p>用户名或密码错误, 请重试</p>#}
+{#    {% endif %}#}
+
+    <form action="{% url 'users:login' %}" method="post" class="form">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        {% buttons %}
+        <button name="submit" class="btn btn-primary">log in</button>
+        {% endbuttons %}
+        <input type='hidden' type="next" value="{% url 'learning_logs:index' %}">
+    </form>
+{% endblock content %}
+</body>
+</html>
