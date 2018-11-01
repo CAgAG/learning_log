@@ -17,6 +17,7 @@
                     {{ entry.date_added|date:'M d, Y H:i' }}
                     <small>
                         <a href="{% url 'learning_logs:edit_entry' entry.id %}">编辑条目</a>
+                        <a href="{% url 'learning_logs:del_entry' entry.id %}" style="float: right"><h5 style="color: red">删除</h5></a>
                     </small>
                 </h3>
             </div>

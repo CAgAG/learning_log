@@ -10,6 +10,8 @@
       <li>
         <h3>
             <a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a>
+            <a href="{% url 'learning_logs:del_topic' topic.id %}" style="float: right"><h5 style="color: red">删除</h5></a>
+            <a href="{% url 'learning_logs:edit_topic' topic.id %}" style="float: right"><h5>重命名|</h5></a>
         </h3>
 	  </li>
     {% empty %}

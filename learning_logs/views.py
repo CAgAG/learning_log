@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,8 @@ from .forms import TopicForm,EntryForm
 
 def index(request):
     """learning_log 主页"""
-    return render(request, 'learning_logs/index.html')
+    context = {'user': request.user}
+    return render(request, 'learning_logs/index.html', context)
 
 @login_required
 def topics(request):
@@ -72,20 +73,6 @@ def new_entry(request, topic_id):
     context = {'topic': topic, 'form': form, 'topic_id': topic_id}
     return render(request, 'learning_logs/new_entry.html', context)
 
-# def edit_entry(requst, entry_id):
-#     entry = Entry.objects.get(id=entry_id)
-#     topic = entry.topic
-#
-#     if requst.method != "POST":
-#         form = EntryForm(instance=entry)
-#     else:
-#         form = EntryForm(instance=entry, data=requst.POST)
-#         if form.is_valid():
-#             form.save()
-#             return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id]))
-#         context = {'entry': entry, 'topic': topic, 'form': form}
-#         return render(requst, 'learning_logs/edit_entry.html', context)
-
 @login_required
 def edit_entry(request, entry_id):
     """编辑一个已存在的条目"""
@@ -106,5 +93,38 @@ def edit_entry(request, entry_id):
 
     context = {'entry': entry, 'topic': topic, 'form': form, 'topic_id': topic.id, 'entry_id': entry_id}
     return render(request, 'learning_logs/edit_entry.html', context)
+
+@login_required
+def del_topic(request, topic_id):
+    topic = Topic.objects.get(id=topic_id)
+    if topic.owner != request.user:
+        raise Http404
+    topic.delete()
+    return HttpResponseRedirect(reverse('learning_logs:topics'))
+
+@login_required
+def del_entry(request, entry_id):
+    entry = Entry.objects.get(id=entry_id)
+    topic = entry.topic
+    if topic.owner != request.user:
+        raise Http404
+    entry.delete()
+    return HttpResponseRedirect(reverse('learning_logs:topic', args=[topic.id]))
+
+@login_required
+def edit_topic(request, topic_id):
+    topic = Topic.objects.get(id=topic_id)
+    if topic.owner != request.user:
+        raise Http404
+    if request.method != "POST":
+        form = TopicForm(instance=topic)
+    else:
+        form = TopicForm(instance=topic, data=request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('learning_logs:topics'))
+    context = {'topic': topic, 'topic_id': topic_id, 'form': form}
+    return render(request, 'learning_logs/edit_topic.html', context)
+
 
 
